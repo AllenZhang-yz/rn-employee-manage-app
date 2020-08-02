@@ -1,21 +1,76 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import Home, { IItem } from './Screens/Home';
+import CreateEmployee from './Screens/CreateEmployee';
+import Profile from './Screens/Profile';
 
-export default function App() {
+export type ModalStackParamList = {
+  Home: undefined;
+  CreateEmployee:
+    | {
+        id: string;
+        name: string;
+        picture: string;
+        phone: string;
+        salary: string;
+        email: string;
+        position: string;
+      }
+    | undefined;
+  Profile: {
+    item: IItem;
+  };
+};
+
+const Stack = createStackNavigator<ModalStackParamList>();
+
+export interface IModalStackNavigation
+  extends StackNavigationProp<ModalStackParamList> {}
+
+const myScreenOptions = {
+  headerTintColor: 'white',
+  headerStyle: {
+    backgroundColor: '#006aff',
+  },
+};
+
+const App = () => {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} options={myScreenOptions} />
+        <Stack.Screen
+          name="CreateEmployee"
+          component={CreateEmployee}
+          options={{ ...myScreenOptions, title: 'Create Person' }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={myScreenOptions}
+        />
+      </Stack.Navigator>
     </View>
   );
-}
+};
+
+export default () => {
+  return (
+    <NavigationContainer>
+      <App />
+    </NavigationContainer>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#e0e0e0',
+    // marginTop: Constants.statusBarHeight,
   },
 });
